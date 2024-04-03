@@ -12,7 +12,7 @@ export const SidebarWrapper = styled.aside`
   height: 100vh;
   padding: 2rem;
   text-align: center;
-  width: 400px;
+  width: 520px;
 
   ${media.lessThan('large')`
   bottom: 0;
@@ -60,8 +60,8 @@ export const InputBox = styled.div<Props>`
 `;
 
 export const Input = styled.input`
-  font-size: 24px;
-  line-height: 24px;
+  font-size: 14px;
+  line-height: 22px;
   width: 100%;
   color: rgb(68, 68, 68);
   background: transparent;
@@ -77,7 +77,7 @@ export const Receipt = styled.ul`
   overflow: auto;
   height: 100%;
   width: 100%;
-  padding: 20px;
+  padding: 10px;
   background: #fff9d8;
   box-shadow: 5px 2px 24px rgba(0, 0, 0, 0.1);
   border-radius: 10px;

@@ -9,7 +9,7 @@ export const MenuBarWrapper = styled.aside`
   border-left: 1px solid #edf0f3;
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 80vh;
   justify-content: flex-start;
   padding: 0.8rem 0;
   width: 120px;

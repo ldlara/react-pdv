@@ -55,12 +55,21 @@ const Sidebar: React.FC<Props> = ({ isSmall }) => {
             <MdDialpad size="24px" color="grey" />
           </s.InputBox>
         </div>
+        <div>
+          <label htmlFor="valueUnit">Valor Unit.</label>
+          <s.InputBox>
+            <s.Input id="valueUnit" />
+            <MdDialpad size="24px" color="grey" />
+          </s.InputBox>
+        </div>
       </s.InputWrapper>
       <hr />
       <s.Receipt>
         <s.Item>
-          <div>DESCRIÇÃO</div>
-          <div>QTD</div>
+          <div>Descrição</div>
+          <div>Qtd</div>
+          <div> Valor Unit.</div>
+          <div>Total</div>
         </s.Item>
         {cart.map((p) => (
           <s.Item>
