@@ -35,6 +35,9 @@ const Sidebar: React.FC<Props> = ({ isSmall }) => {
   })));
 
   return (
+
+
+    
     <s.SidebarWrapper>
       <Profile />
       <s.InputWrapper>

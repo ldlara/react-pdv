@@ -70,6 +70,20 @@ const Dashboard: React.FC = () => {
     dispatch({ type: 'ADD_TO_CART', payload: product });
   }
 
+  const [date, setDate] = useState(new Date());
+  const [intervalId, setIntervalId] = useState<number | null>(null); // Type intervalId as number or null
+
+  useEffect(() => {
+    const updateDate = () => {
+      setDate(new Date());
+    };
+  
+    const intervalId = setInterval(updateDate, 1000); // Update intervalId with the actual ID
+    setIntervalId(intervalId);
+  
+    return () => clearInterval(intervalId); // Limpa o intervalo ao sair do componente
+  }, []);
+
   return (
     <Layout>
       <s.Header>
@@ -79,7 +93,7 @@ const Dashboard: React.FC = () => {
             CAIXA ABERTO
           </span>
           <span className="date">
-            Sexta, 10 julho 2020
+          {date.toLocaleDateString()}
           </span>
         </s.Info>
       </s.Header>
@@ -91,7 +105,7 @@ const Dashboard: React.FC = () => {
           </header>
           <section>
             <p>R$</p>
-            <h1>0,00</h1>
+            <h1>457,56</h1>
           </section>
         </s.Card>
         <s.Card>
@@ -101,7 +115,7 @@ const Dashboard: React.FC = () => {
           </header>
           <section>
             <p>R$</p>
-            <h1>0,00</h1>
+            <h1>24.540,25</h1>
           </section>
         </s.Card>
         <s.Card>
@@ -111,15 +125,17 @@ const Dashboard: React.FC = () => {
           </header>
           <section>
             <p>R$</p>
-            <h1>0,00</h1>
+            <h1>24.997,81</h1>
           </section>
         </s.Card>
       </s.CardContainer>
+
       <s.Search>
         <FiSearch size="24px" color="grey" />
         <s.SearchInput placeholder="Consultar Material" />
       </s.Search>
-      <s.CategoryContainer>
+      
+      {/* <s.CategoryContainer>
         <CarouselProvider
           naturalSlideWidth={100}
           naturalSlideHeight={190}
@@ -184,7 +200,7 @@ const Dashboard: React.FC = () => {
           <ButtonNext className="buttonNext"><FiChevronRight size="24px" color="grey" /></ButtonNext>
         </CarouselProvider>
 
-      </s.CategoryContainer>
+      </s.CategoryContainer> */}
       <ProductList>
         {products.map((product) => (
           <li key={product.id}>
