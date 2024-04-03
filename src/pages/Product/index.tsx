@@ -5,7 +5,7 @@ import Layout from '../../components/Layout';
 
 const Product: React.FC = () => (
   <Layout>
-    <h1>Product</h1>
+    <h1>Produto</h1>
   </Layout>
 
 );

@@ -39,14 +39,14 @@ const Sidebar: React.FC<Props> = ({ isSmall }) => {
       <Profile />
       <s.InputWrapper>
         <div>
-          <label htmlFor="product_cod">Cod.Product</label>
+          <label htmlFor="product_cod">Cod.Produto</label>
           <s.InputBox>
             <s.Input id="product_cod" />
             <AiOutlineScan size="24px" color="grey" />
           </s.InputBox>
         </div>
         <div>
-          <label htmlFor="quantity">Quantity</label>
+          <label htmlFor="quantity">Quantidade</label>
           <s.InputBox isSmall={isSmall}>
             <s.Input id="quantity" />
             <MdDialpad size="24px" color="grey" />

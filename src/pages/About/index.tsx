@@ -5,7 +5,7 @@ import Layout from '../../components/Layout';
 
 const About: React.FC = () => (
   <Layout>
-    <h1>About</h1>
+    <h1>Sobre</h1>
   </Layout>
 
 );

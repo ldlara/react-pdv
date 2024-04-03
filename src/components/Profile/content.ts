@@ -1,6 +1,6 @@
 const profile = {
-  alias: 'Goku',
-  role: 'POS Operator',
+  alias: 'Deha PDV',
+  role: 'Operator',
 };
 
 export default profile;
