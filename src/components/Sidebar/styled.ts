@@ -1,7 +1,9 @@
 import styled from 'styled-components';
 import media from 'styled-media-query';
 
-import { Props } from '.';
+interface Props {
+  isSmall?: boolean;
+}
 
 export const SidebarWrapper = styled.aside`
   align-items: center;
@@ -15,26 +17,27 @@ export const SidebarWrapper = styled.aside`
   width: 520px;
 
   ${media.lessThan('large')`
-  bottom: 0;
-flex-direction: row;
-height: 200px;
-padding: 0;
-position: fixed;
-width: 100%;
-justify-content: space-evenly;
+    height: auto;
+    min-height: 100vh;
+    width: 100%;
+    padding: 1rem;
+    justify-content: space-evenly;
   `}
 `;
 
 export const InputWrapper = styled.div`
   display: flex;
   margin-top: 31px;
+
   div + div {
     margin-left: 8px;
     flex: 1;
   }
+
   > div:first-child {
     width: 197px;
   }
+
   label {
     font-size: 14px;
     line-height: 16px;
@@ -68,25 +71,59 @@ export const Input = styled.input`
   border: 0;
   outline: none;
   -webkit-font-smoothing: antialiased !important;
+
+  /* Adicione a propriedade 'max' para limitar o valor máximo do input */
+  &[type='number'] {
+    max: 10; /* Defina o valor máximo permitido (neste exemplo, 10 unidades) */
+  }
+
   &::placeholder {
     color: #dadada;
   }
 `;
 
-export const Receipt = styled.ul`
+export const Receipt = styled.div`
   overflow: auto;
-  height: 100%;
   width: 100%;
   padding: 10px;
   background: #fff9d8;
   box-shadow: 5px 2px 24px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
+
+  .table-wrapper {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th,
+    td {
+      padding: 8px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #f0f0f0;
+      font-weight: bold;
+    }
+
+    td {
+      border-bottom: 1px solid #eaeaea;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+  }
 `;
 
-export const Item = styled.li`
+export const Item = styled.div`
   display: flex;
-
   justify-content: space-between;
+
   div {
     font-family: Roboto Mono;
     font-style: normal;
