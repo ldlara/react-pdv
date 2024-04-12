@@ -1,6 +1,10 @@
 import styled from 'styled-components';
 import media from 'styled-media-query';
 
+interface Props {
+  isSmall?: boolean;
+}
+
 export const Header = styled.div`
   margin-bottom: 28px;
   display: flex;
@@ -70,60 +74,6 @@ export const SearchInput = styled.input`
   padding: 0 1rem;
   outline: none;
   -webkit-font-smoothing: antialiased;
-`;
-
-export const CardContainer = styled.section`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`;
-
-export const Card = styled.div`
-  background: #ffffff;
-  box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  width: 100%;
-  flex: 1%;
-  height: 126px;
-  padding: 18px;
-  border-radius: 5px;
-  display: flex;
-  flex-direction: column;
-  & + div {
-    margin-left: 18px;
-  }
-  header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    p {
-      font-style: normal;
-      font-weight: 600;
-      font-size: 14px;
-      line-height: 19px;
-      letter-spacing: -0.274286px;
-      color: #8e99af;
-    }
-  }
-  section {
-    p {
-      font-style: normal;
-      font-weight: 300;
-      font-size: 14px;
-      line-height: 19px;
-      letter-spacing: -0.274286px;
-      color: #8e99af;
-    }
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    h1 {
-      margin-top: 14px;
-      font-size: 36px;
-      font-weight: 100;
-      line-height: 54px;
-    }
-  }
 `;
 
 export const CategoryContainer = styled.div`
@@ -212,4 +162,105 @@ height: auto;
 
 
 
+`;
+
+export const InputWrapper = styled.div`
+  display: flex;
+  margin-top: 31px;
+
+  div + div {
+    margin-left: 8px;
+    flex: 1;
+  }
+
+  > div:first-child {
+    width: 197px;
+  }
+
+  label {
+    font-size: 14px;
+    line-height: 16px;
+    color: #292c48;
+    font-weight: 300;
+    display: block;
+    text-align: left;
+    padding-left: 20px;
+    margin-bottom: 3px;
+  }
+`;
+
+export const InputBox = styled.div<Props>`
+  display: flex;
+  align-items: center;
+  height: 50px;
+  border-width: 2px;
+  border-style: solid;
+  border-color: rgb(218, 218, 218);
+  border-image: initial;
+  border-radius: 24px;
+  padding: ${(props) => (props.isSmall ? '0 17px' : '0 24px')};
+  width: 197px; /* Adicione esta propriedade para definir a largura igual para ambas as caixas */
+
+  &:last-child {
+    margin-left: 8px; /* Adicione margem apenas à segunda caixa */
+  }
+`;
+
+
+export const Input = styled.input`
+  font-size: 14px;
+  line-height: 22px;
+  width: 100%;
+  color: rgb(68, 68, 68);
+  background: transparent;
+  border: 0;
+  outline: none;
+  -webkit-font-smoothing: antialiased !important;
+
+  /* Adicione a propriedade 'max' para limitar o valor máximo do input */
+  &[type='number'] {
+    max: 10; /* Defina o valor máximo permitido (neste exemplo, 10 unidades) */
+  }
+
+  &::placeholder {
+    color: #dadada;
+  }
+`;
+
+export const Receipt = styled.div`
+  overflow: auto;
+  width: 100%;
+  padding: 10px;
+  background: #fff9d8;
+  box-shadow: 5px 2px 24px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+
+  .table-wrapper {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th,
+    td {
+      padding: 8px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #f0f0f0;
+      font-weight: bold;
+    }
+
+    td {
+      border-bottom: 1px solid #eaeaea;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+  }
 `;

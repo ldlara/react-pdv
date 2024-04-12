@@ -1,7 +1,7 @@
 import React from 'react';
 
 import {
-  FiUser, FiSliders, FiBox, FiMonitor, FiInfo,
+  FiMonitor, FiInfo,
 } from 'react-icons/fi';
 
 import LogoImg from '../../assets/logo.png';

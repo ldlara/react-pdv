@@ -1,37 +1,16 @@
-/* eslint-disable import/no-unresolved */
-import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-
-import {
-  FiDollarSign, FiCreditCard, FiHardDrive, FiSearch, FiChevronRight, FiChevronLeft, FiPlusCircle,
-} from 'react-icons/fi';
-
-import {
-  CarouselProvider, Slider, Slide, ButtonBack, ButtonNext,
-} from 'pure-react-carousel';
-import 'pure-react-carousel/dist/react-carousel.es.css';
-
-import '../../styles/carrousel.css';
+import React, { useEffect, useState, useRef } from 'react';
+import { useDispatch } from 'react-redux';
+import { AiOutlineScan } from 'react-icons/ai';
+import { MdDialpad } from 'react-icons/md';
+import { FiSearch, FiPlusCircle } from 'react-icons/fi';
 
 import * as s from './styled';
 import Layout from '../../components/Layout';
-
-import bebidas from '../../assets/images/bebidas-icon.svg';
-import frios from '../../assets/images/frios-icon.svg';
-import salgados from '../../assets/images/salgados-icon.svg';
-import sorvetes from '../../assets/images/sorvetes-icon.svg';
-import delicatessen from '../../assets/images/delicatessen-ico.svg';
-import sanduiche from '../../assets/images/sanduiche-ico.svg';
 import api from '../../service/api';
 import { formatPrice } from '../../utils/formatPrice';
 import { ProductList } from '../../components/ProductList';
 
-export interface Stock {
-  id: number;
-  amount: number;
-}
-
-export interface Product {
+interface Product {
   id: number;
   title: string;
   price: number;
@@ -40,27 +19,25 @@ export interface Product {
   priceFormatted: string;
 }
 
-export interface Cart {
-  cart: Product[];
-}
-
 const Dashboard: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [cartItems, setCartItems] = useState<Product[]>([]);
+  const [total, setTotal] = useState(0);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     async function loadProducts() {
-      const response = await api.get<Product[]>(
-        '/products',
-      );
-
-      const data = response.data.map((product) => ({
-        ...product,
-        priceFormatted: formatPrice(product.price),
-      }));
-
-      setProducts(data);
+      try {
+        const response = await api.get<Product[]>('/products');
+        const data = response.data.map((product) => ({
+          ...product,
+          priceFormatted: formatPrice(product.price),
+        }));
+        setProducts(data);
+      } catch (error) {
+        console.error('Error loading products:', error);
+      }
     }
 
     loadProducts();
@@ -71,17 +48,57 @@ const Dashboard: React.FC = () => {
   }
 
   const [date, setDate] = useState(new Date());
-  const [intervalId, setIntervalId] = useState<number | null>(null); // Type intervalId as number or null
+
+  const productCodeRef = useRef<HTMLInputElement>(null);
+  const quantityRef = useRef<HTMLInputElement>(null);
+
+  const handleKeyDown = async (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      const productCode = productCodeRef.current?.value;
+      const quantity = quantityRef.current?.value;
+
+      if (productCode && quantity && parseInt(quantity) >= 1) {
+        const newProduct: Product = {
+          id: new Date().valueOf(),
+          title: productCode,
+          price: await fetchPrice(productCode),
+          amount: parseInt(quantity),
+          image: '',
+          priceFormatted: '',
+        };
+
+        setCartItems([...cartItems, newProduct]);
+        setTotal(total + newProduct.price * newProduct.amount);
+
+        if (productCodeRef.current) {
+          productCodeRef.current.value = '';
+        }
+
+        if (quantityRef.current) {
+          quantityRef.current.value = '1';
+        }
+      }
+    }
+  };
+
+  const fetchPrice = async (productCode: string) => {
+    try {
+      const response = await api.get(`/products/${productCode}`);
+      const productPrice = response.data.price;
+      return productPrice >= 0.01 ? productPrice : 0.01;
+    } catch (error) {
+      console.error('Error fetching price:', error);
+      return 0.01;
+    }
+  };
 
   useEffect(() => {
     const updateDate = () => {
       setDate(new Date());
     };
-  
-    const intervalId = setInterval(updateDate, 1000); // Update intervalId with the actual ID
-    setIntervalId(intervalId);
-  
-    return () => clearInterval(intervalId); // Limpa o intervalo ao sair do componente
+
+    updateDate();
+
   }, []);
 
   return (
@@ -93,114 +110,64 @@ const Dashboard: React.FC = () => {
             CAIXA ABERTO
           </span>
           <span className="date">
-          {date.toLocaleDateString()}
+            {date.toLocaleDateString()}
           </span>
         </s.Info>
       </s.Header>
-      <s.CardContainer>
-        <s.Card>
-          <header>
-            <p>Dinheiro</p>
-            <FiDollarSign size="24px" color="green" />
-          </header>
-          <section>
-            <p>R$</p>
-            <h1>457,56</h1>
-          </section>
-        </s.Card>
-        <s.Card>
-          <header>
-            <p>Cartão</p>
-            <FiCreditCard size="24px" color="orange" />
-          </header>
-          <section>
-            <p>R$</p>
-            <h1>24.540,25</h1>
-          </section>
-        </s.Card>
-        <s.Card>
-          <header>
-            <p>Caixa</p>
-            <FiHardDrive size="24px" color="grey" />
-          </header>
-          <section>
-            <p>R$</p>
-            <h1>24.997,81</h1>
-          </section>
-        </s.Card>
-      </s.CardContainer>
 
       <s.Search>
         <FiSearch size="24px" color="grey" />
         <s.SearchInput placeholder="Consultar Material" />
       </s.Search>
       
-      {/* <s.CategoryContainer>
-        <CarouselProvider
-          naturalSlideWidth={100}
-          naturalSlideHeight={190}
-          totalSlides={6}
-          visibleSlides={5}
-          infinite
-        >
-          <Slider>
-            <Slide index={0}>
-              <s.CategoryItem>
-                <header>
-                  <p>Delicatessen</p>
-                  <img src={delicatessen} alt="" />
-                </header>
-              </s.CategoryItem>
-            </Slide>
-            <Slide index={1}>
-              <s.CategoryItem>
-                <header>
-                  <p>Frios</p>
-                  <img src={frios} alt="" />
-                </header>
-              </s.CategoryItem>
+      <s.InputWrapper>
+        <div>
+          <label htmlFor="product_cod">Cod.Produto</label>
+          <s.InputBox>
+            <s.Input id="product_cod" ref={productCodeRef} onKeyDown={handleKeyDown} />
+            <AiOutlineScan size="24px" color="grey" />
+          </s.InputBox>
+        </div>
+        <div>
+          <label htmlFor="quantity">Qtde</label>
+          <s.InputBox isSmall={false}>
+            <s.Input id="quantity" ref={quantityRef} defaultValue="1" onKeyDown={handleKeyDown} />
+            <MdDialpad size="24px" color="grey" />
+          </s.InputBox>
+        </div>
+      </s.InputWrapper>
+      <hr />
+      <s.Receipt>
+        <div className="table-wrapper">
+          <table className="responsive-table">
+            <thead>
+              <tr>
+                <th>Descrição do produto</th>
+                <th>Qtde</th>
+                <th>Valor unitário</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {cartItems.map((p, index) => (
+                <tr key={index}>
+                  <td>{p.title}</td>
+                  <td>{p.amount}</td>
+                  <td>{formatPrice(p.price)}</td>
+                  <td>{formatPrice(p.price * p.amount)}</td>
+                </tr>
+              ))}
+              <tr>
+                <td>Total</td>
+                <td></td>
+                <td></td>
+                <td>{formatPrice(total)}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </s.Receipt>
 
-            </Slide>
-            <Slide index={2}>
-              <s.CategoryItem>
-                <header>
-                  <p>Salgados</p>
-                  <img src={salgados} alt="" />
-                </header>
-              </s.CategoryItem>
-            </Slide>
-            <Slide index={3}>
-              <s.CategoryItem>
-                <header>
-                  <p>Bebidas</p>
-                  <img src={bebidas} alt="" />
-                </header>
-              </s.CategoryItem>
-            </Slide>
-
-            <Slide index={4}>
-              <s.CategoryItem>
-                <header>
-                  <p>Sorvetes</p>
-                  <img src={sorvetes} alt="" />
-                </header>
-              </s.CategoryItem>
-            </Slide>
-
-            <Slide index={5}>
-              <s.CategoryItem>
-                <header>
-                  <p>Sanduíches</p>
-                  <img src={sanduiche} alt="" />
-                </header>
-              </s.CategoryItem>
-            </Slide>
-          </Slider>
-          <ButtonBack className="buttonBack"><FiChevronLeft size="24px" color="grey" /></ButtonBack>
-          <ButtonNext className="buttonNext"><FiChevronRight size="24px" color="grey" /></ButtonNext>
-        </CarouselProvider>
-
-      </s.CategoryContainer> */}
       <ProductList>
         {products.map((product) => (
           <li key={product.id}>
