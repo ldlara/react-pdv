@@ -39,7 +39,7 @@
         }
       ]
     },
-    "settings": {
+    "settings": { 
       "import/resolver": {
         "typescript": {}
       }
